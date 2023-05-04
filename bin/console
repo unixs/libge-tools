@@ -7,5 +7,12 @@ require "libge/tools"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
-require "irb"
-IRB.start(__FILE__)
+include Libge::Tools
+
+parser = SheetParser::GoogleParser.new
+data = parser.parse
+
+ap data
+
+require "pry"
+Pry.start(__FILE__)
