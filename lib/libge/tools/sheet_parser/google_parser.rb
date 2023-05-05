@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "google_drive"
+require "yaml"
 require "pry"
 
 SHEET_KEY = "1HvADoWv1AcyPlieFPLi-681C1L73sTXMdOir_KjTQnI"
@@ -21,7 +22,7 @@ module Libge
           :publishing => 7,
           :status => 8,
           :image => 9
-        }
+        }.freeze
 
         def initialize
           @data = []
@@ -31,11 +32,17 @@ module Libge
 
         def parse
           ap "Parse."
+
+          @file = @session.spreadsheet_by_key(SHEET_KEY)
           @data = Data.new(
-            nil,
-            nil,
+            DateTime.now.to_s,
+            @file.modified_time.to_s,
             parse_sheets
           )
+        end
+
+        def to_s
+          YAML.dump(@data)
         end
 
         private
@@ -50,7 +57,7 @@ module Libge
           categories = []
 
           ap "Each all sheets"
-          sheets = @session.spreadsheet_by_key(SHEET_KEY).worksheets
+          sheets = @file.worksheets
 
           to_skip = [0]
 

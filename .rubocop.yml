@@ -23,7 +23,7 @@ Style/HashSyntax:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 20
+  Max: 25
 
 Layout/LineLength:
   Max: 80
