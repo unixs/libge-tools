@@ -27,12 +27,10 @@ module Libge
         def initialize
           @data = []
           @session = GoogleDrive::Session
-            .from_service_account_key("config/service_secret.json")
+            .from_service_account_key("service_secret.json")
         end
 
         def parse
-          ap "Parse."
-
           @file = @session.spreadsheet_by_key(SHEET_KEY)
           @data = Data.new(
             DateTime.now.to_s,
@@ -47,7 +45,7 @@ module Libge
 
         private
 
-        def category?(row)
+        def category?(row) # rubocop:disable Metrics/AbcSize
           !row[COLS_MAP[:author]].size.zero? &&
             (row[COLS_MAP[:title]].nil? || row[COLS_MAP[:title]].empty?) &&
             (row[COLS_MAP[:status]].nil? || row[COLS_MAP[:status]].empty?)
@@ -56,13 +54,11 @@ module Libge
         def parse_sheets
           categories = []
 
-          ap "Each all sheets"
           sheets = @file.worksheets
 
           to_skip = [0]
 
           sheets.each_with_index do |sheet, idx|
-            ap " Parse sheet: #{sheet.title}"
             next if to_skip.include? idx
 
             categories.push parse_sheet(sheet)
@@ -100,7 +96,7 @@ module Libge
           category
         end
 
-        def parse_row(row)
+        def parse_row(row) # rubocop:disable Metrics/AbcSize
           Book.new(
             row[COLS_MAP[:title]],
             row[COLS_MAP[:author]],

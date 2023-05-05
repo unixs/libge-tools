@@ -7,14 +7,13 @@ require "libge/tools"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
-include Libge::Tools
+include Libge::Tools # rubocop:disable Style/MixinUsage
 
 parser = SheetParser::GoogleParser.new
-data = parser.parse
 
-File.open("tmp/library.yml", "w") do |f|
-  f.puts parser.to_s
-end
+parser.parse
 
-require "pry"
-Pry.start(__FILE__)
+puts parser.to_s
+
+# require "pry"
+# Pry.start(__FILE__)
