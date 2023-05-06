@@ -2,9 +2,9 @@
 
 module Libge::Tools::SheetParser::GoogleParser::Strategies
   class First < Base
-    def call(sheet)
-      puts "FIRST"
-      ap sheet
+    def call(data, sheet)
+      # puts "FIRST"
+      # ap sheet
     end
   end
 end

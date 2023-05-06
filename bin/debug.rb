@@ -8,6 +8,4 @@ include Libge::Tools::SheetParser::GoogleParser # rubocop:disable Style/MixinUsa
 
 parser = Parser.new
 
-parser.parse
-
-puts parser.to_s
+puts parser.parse.to_s

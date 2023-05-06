@@ -4,8 +4,8 @@ module Libge::Tools::SheetParser::GoogleParser
   class Context
     attr_writer :strategy
 
-    def parse(sheet)
-      @strategy.call(sheet)
+    def parse(data, sheet)
+      @strategy.call(data, sheet)
     end
   end
 end

@@ -14,9 +14,8 @@ module Libge::Tools::SheetParser::GoogleParser
   class Parser
     include Libge::Tools::SheetParser
 
-    FIRST_PAGE_IDX = [0].freeze
+    FIRST_PAGE_IDX = 0
     UNTRANSLATED_PAGE_IDXS = [7].freeze
-
 
     def initialize
       @data = []
@@ -34,8 +33,12 @@ module Libge::Tools::SheetParser::GoogleParser
       @data = Data.new(
         DateTime.now.to_s,
         @file.modified_time.to_s,
-        parse_sheets
+        []
       )
+
+      parse_sheets(@data)
+
+      self
     end
 
     def to_s
@@ -45,7 +48,7 @@ module Libge::Tools::SheetParser::GoogleParser
     private
 
     def get_context_strategy(sheet_idx)
-      if FIRST_PAGE_IDX.include?(sheet_idx)
+      if sheet_idx == FIRST_PAGE_IDX
         # parse first page
         @first_sheet
       elsif UNTRANSLATED_PAGE_IDXS.include?(sheet_idx)
@@ -57,67 +60,13 @@ module Libge::Tools::SheetParser::GoogleParser
       end
     end
 
-    def parse_sheets
-      categories = []
-
+    def parse_sheets(data)
       sheets = @file.worksheets
 
       sheets.each_with_index do |sheet, idx|
         @context.strategy = get_context_strategy(idx)
-        categories.push @context.parse(sheet)
+        @context.parse(data, sheet)
       end
-
-      categories
-    end
-
-    def category?(row)
-      !row[COLS_MAP[:author]].empty? &&
-        (row[COLS_MAP[:title]].nil? || row[COLS_MAP[:title]].empty?) &&
-        (row[COLS_MAP[:status]].nil? || row[COLS_MAP[:status]].empty?)
-    end
-
-    def parse_sheet(sheet)
-      books = []
-      categories = []
-
-      category = Category.new(
-        sheet.title,
-        books,
-        categories
-      )
-
-      sheet.rows.each_with_index do |row, idx|
-        next if idx.zero?
-
-        if category?(row)
-          books = []
-
-          categories.push Category.new(
-            row[COLS_MAP[:author]],
-            books,
-            nil
-          )
-        else
-          books.push parse_row(row)
-        end
-      end
-
-      category
-    end
-
-    def parse_row(row) # rubocop:disable Metrics/AbcSize
-      Book.new(
-        row[COLS_MAP[:title]],
-        row[COLS_MAP[:author]],
-        row[COLS_MAP[:brief]],
-        row[COLS_MAP[:pages]],
-        row[COLS_MAP[:age]],
-        row[COLS_MAP[:lang]],
-        row[COLS_MAP[:translator]],
-        row[COLS_MAP[:publishing]],
-        row[COLS_MAP[:status]],
-        row[COLS_MAP[:image]]
-      )
     end
   end
 end
