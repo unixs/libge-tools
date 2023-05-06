@@ -4,8 +4,6 @@ require "bundler/setup"
 require "libge/tools"
 require "awesome_print"
 
-include Libge::Tools::SheetParser::GoogleParser # rubocop:disable Style/MixinUsage
+ap ARGV
 
-parser = Parser.new
-
-puts parser.parse.to_s
+puts Libge::Tools::SheetParser::GoogleParser::Parser.new.parse(ARGV.first).to_s

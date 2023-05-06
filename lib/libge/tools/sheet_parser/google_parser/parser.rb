@@ -6,10 +6,6 @@ require "yaml"
 require_relative "strategies"
 require_relative "context"
 
-
-SHEET_KEY = "1HvADoWv1AcyPlieFPLi-681C1L73sTXMdOir_KjTQnI"
-
-
 module Libge::Tools::SheetParser::GoogleParser
   class Parser
     include Libge::Tools::SheetParser
@@ -29,8 +25,8 @@ module Libge::Tools::SheetParser::GoogleParser
       @untranslated_sheet = Strategies::Untranslated.new
     end
 
-    def parse
-      @file = @session.spreadsheet_by_key(SHEET_KEY)
+    def parse(key)
+      @file = @session.spreadsheet_by_key(key)
       @data = Data.new(
         [],
         DateTime.now.to_s,

@@ -11,9 +11,10 @@ include Libge::Tools::SheetParser::GoogleParser # rubocop:disable Style/MixinUsa
 
 parser = Parser.new
 
-parser.parse
+key = ARGV.first
+
+raise ArgumentError, "Missing sheet key cmd arg" unless key
+
+parser.parse key
 
 puts parser.to_s
-
-# require "pry"
-# Pry.start(__FILE__)
