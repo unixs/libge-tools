@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "awesome_print"
-
 require_relative "tools/version"
 require_relative "tools/sheet_parser"
 

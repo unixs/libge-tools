@@ -1,0 +1,89 @@
+image: ruby:3.2-alpine
+
+
+stages:
+  - prepare
+  - test
+#  - build
+  - deploy
+
+
+#.full_cache: &full_cache
+#  key: '$CI_PROJECT_ID-$CI_COMMIT_REF_SLUG'
+#  paths:
+#    - node_modules/
+#    - dist/
+
+
+bundle_install:
+  stage: prepare
+  #cache:
+  #  key: '$CI_PROJECT_ID-$CI_COMMIT_REF_SLUG'
+  #  paths:
+  #    - node_modules/
+  #  policy: push
+  script:
+    - bundle install
+  #only:
+  #  changes:
+  #    - package-lock.json
+
+testing:
+  stage: test
+  #only:
+  #  changes:
+  #    - src/**/*
+  #    - test/**/*
+  #    - jest.config.js
+  #cache:
+  #  key: '$CI_PROJECT_ID-$CI_COMMIT_REF_SLUG'
+  #  paths:
+  #    - node_modules/
+  #  policy: pull
+  script:
+    - bundle exec rake rubocop
+    - bundle exec rake spec
+
+#build:
+  #stage: build
+  #cache:
+  #  <<: *full_cache
+  #only:
+  #  changes:
+  #    - src/**/*
+  #    - package-lock.json
+  #script:
+  #  - npm run build
+
+deploy_gitlab:
+  stage: deploy
+  cache:
+    key: '$CI_PROJECT_ID-$CI_COMMIT_REF_SLUG'
+    paths:
+      - dist/
+    policy: pull
+  only:
+    # Includes pre-release versions
+    - /^v\d+\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?$/
+  script:
+    - env | grep CI_
+    # Release package as @a11y-tools/a11y-tools
+    - npm publish
+
+#deploy_production:
+#  when: manual
+#  stage: deploy
+#  cache:
+#    key: '$CI_PROJECT_ID-$CI_COMMIT_REF_SLUG'
+#    paths:
+#      - dist/
+#    policy: pull
+#  only:
+#    # Stable releases only
+#    - /^v\d+\.\d+\.\d+$/
+#  script:
+#    - env | grep CI_
+#    - echo "registry=https://nexus.releng.pearsondev.com/repository/npm-internal/" > .npmrc
+#    - echo "//nexus.releng.pearsondev.com/repository/npm-internal/:username=${GITLAB_USER_LOGIN}" >> .npmrc
+#    - echo "//nexus.releng.pearsondev.com/repository/npm-internal/:_auth=${NPM_AUTH}" >> .npmrc
+#    - npm publish

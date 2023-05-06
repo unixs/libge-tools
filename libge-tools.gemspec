@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
   spec.version = Libge::Tools::VERSION
   spec.authors = ["Alexander Feodorov"]
   spec.email = ["vester@unixcomp.org"]
+  spec.license = 'LGPL-3.0'
 
   spec.summary = "Tools for Libge"
   # spec.description = "TODO: Write a longer description or delete this line."
@@ -16,8 +17,9 @@ Gem::Specification.new do |spec|
   # mspec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://gitlab.com/libge/tools"
-  spec.metadata["changelog_uri"] = "https://gitlab.com/libge/tools/-/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/unixs/libge-tools"
+  spec.metadata["changelog_uri"] = "https://github.com/unixs/libge-tools/blob/master/CHANGELOG.md"
+  spec.metadata["github_repo"] = "ssh://github.com/unixs/libge-tools"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the
