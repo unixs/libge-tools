@@ -2,7 +2,7 @@
 
 require_relative "strategies/base"
 require_relative "strategies/default"
-require_relative "strategies/first"
+require_relative "strategies/conditions"
 require_relative "strategies/untranslated"
 
 module Libge

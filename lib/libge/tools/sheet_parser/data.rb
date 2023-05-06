@@ -4,6 +4,7 @@ module Libge
   module Tools
     module SheetParser
       Data = Struct.new(
+        :conditions,
         :datetime,
         :changed,
         :categories

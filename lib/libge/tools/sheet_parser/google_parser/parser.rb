@@ -14,16 +14,17 @@ module Libge::Tools::SheetParser::GoogleParser
   class Parser
     include Libge::Tools::SheetParser
 
+    attr_reader :data
+
     FIRST_PAGE_IDX = 0
     UNTRANSLATED_PAGE_IDXS = [7].freeze
 
     def initialize
-      @data = []
       @session = GoogleDrive::Session
         .from_service_account_key("service_secret.json")
 
       @context = Context.new
-      @first_sheet = Strategies::First.new
+      @conditions_sheet = Strategies::Conditions.new
       @default_sheet = Strategies::Default.new
       @untranslated_sheet = Strategies::Untranslated.new
     end
@@ -31,6 +32,7 @@ module Libge::Tools::SheetParser::GoogleParser
     def parse
       @file = @session.spreadsheet_by_key(SHEET_KEY)
       @data = Data.new(
+        [],
         DateTime.now.to_s,
         @file.modified_time.to_s,
         []
@@ -50,7 +52,7 @@ module Libge::Tools::SheetParser::GoogleParser
     def get_context_strategy(sheet_idx)
       if sheet_idx == FIRST_PAGE_IDX
         # parse first page
-        @first_sheet
+        @conditions_sheet
       elsif UNTRANSLATED_PAGE_IDXS.include?(sheet_idx)
         # parse georgian page
         @untranslated_sheet
