@@ -1,11 +1,8 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require "bundler/setup"
 require "libge/tools"
-
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+require "awesome_print"
 
 include Libge::Tools::SheetParser::GoogleParser # rubocop:disable Style/MixinUsage
 
@@ -14,6 +11,3 @@ parser = Parser.new
 parser.parse
 
 puts parser.to_s
-
-# require "pry"
-# Pry.start(__FILE__)

@@ -22,6 +22,9 @@ Layout/EmptyLines:
 Style/HashSyntax:
   Enabled: false
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 Metrics/MethodLength:
   Max: 25
 

@@ -1,116 +1,12 @@
 # frozen_string_literal: true
 
-require "google_drive"
-require "yaml"
-require "pry"
-
-SHEET_KEY = "1HvADoWv1AcyPlieFPLi-681C1L73sTXMdOir_KjTQnI"
-
-
 module Libge
   module Tools
     module SheetParser
-      class GoogleParser
-        COLS_MAP = {
-          :title => 1,
-          :author => 0,
-          :brief => 2,
-          :pages => 3,
-          :age => 4,
-          :lang => 5,
-          :translator => 6,
-          :publishing => 7,
-          :status => 8,
-          :image => 9
-        }.freeze
-
-        def initialize
-          @data = []
-          @session = GoogleDrive::Session
-            .from_service_account_key("service_secret.json")
-        end
-
-        def parse
-          @file = @session.spreadsheet_by_key(SHEET_KEY)
-          @data = Data.new(
-            DateTime.now.to_s,
-            @file.modified_time.to_s,
-            parse_sheets
-          )
-        end
-
-        def to_s
-          YAML.dump(@data)
-        end
-
-        private
-
-        def category?(row) # rubocop:disable Metrics/AbcSize
-          !row[COLS_MAP[:author]].size.zero? &&
-            (row[COLS_MAP[:title]].nil? || row[COLS_MAP[:title]].empty?) &&
-            (row[COLS_MAP[:status]].nil? || row[COLS_MAP[:status]].empty?)
-        end
-
-        def parse_sheets
-          categories = []
-
-          sheets = @file.worksheets
-
-          to_skip = [0]
-
-          sheets.each_with_index do |sheet, idx|
-            next if to_skip.include? idx
-
-            categories.push parse_sheet(sheet)
-          end
-
-          categories
-        end
-
-        def parse_sheet(sheet)
-          books = []
-          categories = []
-
-          category = Category.new(
-            sheet.title,
-            books,
-            categories
-          )
-
-          sheet.rows.each_with_index do |row, idx|
-            next if idx.zero?
-
-            if category?(row)
-              books = []
-
-              categories.push Category.new(
-                row[COLS_MAP[:author]],
-                books,
-                nil
-              )
-            else
-              books.push parse_row(row)
-            end
-          end
-
-          category
-        end
-
-        def parse_row(row) # rubocop:disable Metrics/AbcSize
-          Book.new(
-            row[COLS_MAP[:title]],
-            row[COLS_MAP[:author]],
-            row[COLS_MAP[:brief]],
-            row[COLS_MAP[:pages]],
-            row[COLS_MAP[:age]],
-            row[COLS_MAP[:lang]],
-            row[COLS_MAP[:translator]],
-            row[COLS_MAP[:publishing]],
-            row[COLS_MAP[:status]],
-            row[COLS_MAP[:image]]
-          )
-        end
+      module GoogleParser
       end
     end
   end
 end
+
+require_relative "google_parser/parser"
