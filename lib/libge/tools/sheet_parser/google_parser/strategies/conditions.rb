@@ -7,7 +7,7 @@ module Libge::Tools::SheetParser::GoogleParser::Strategies
         # skip headings
         next if idx.zero?
 
-        data.conditions.push row[0]
+        data.conditions.push row.first
       end
     end
   end

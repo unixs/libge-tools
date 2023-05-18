@@ -89,3 +89,5 @@ Lint/LambdaWithoutLiteralBlock:
 Lint/NoReturnInBeginEndBlocks:
   Enabled: true
 
+Layout/FirstArgumentIndentation:
+  Enabled: false

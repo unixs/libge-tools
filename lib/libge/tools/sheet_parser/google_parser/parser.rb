@@ -17,7 +17,7 @@ module Libge::Tools::SheetParser::GoogleParser
 
     def initialize
       @session = GoogleDrive::Session
-        .from_service_account_key("service_secret.json")
+        .from_service_account_key(get_config_path)
 
       @context = Context.new
       @conditions_sheet = Strategies::Conditions.new
@@ -44,6 +44,29 @@ module Libge::Tools::SheetParser::GoogleParser
     end
 
     private
+
+    def get_config_path # rubocop:disable Naming/AccessorMethodName
+      begin
+        path =  if Process.uid.zero?
+                  File.realpath(CONFIG_NAME + CONFIG_SUFFIX, '/etc')
+                else
+                  # check rc-file in $HOME
+                  File.realpath(
+                    ".#{CONFIG_NAME}#{USER_CONFIG_SUFFIX}",
+                    Dir.home
+                  )
+                end
+      rescue SystemCallError
+        path = File.realpath(CONFIG_NAME + CONFIG_SUFFIX)
+      end
+
+      path
+    rescue SystemCallError => e
+      warn "Config file not found in cwd and default paths"
+      warn e.message
+
+      exit e.errno
+    end
 
     def get_context_strategy(sheet_idx)
       if sheet_idx == FIRST_PAGE_IDX
