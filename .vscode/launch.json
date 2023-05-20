@@ -6,9 +6,9 @@
   "configurations": [
     {
       "name": "Debug Local File",
-      "type": "Ruby",
+      "type": "rdbg",
       "request": "launch",
-      "program": "${workspaceRoot}/bin/debug.rb",
+      "script": "${workspaceRoot}/bin/debug.rb",
       "args": [
         "1HvADoWv1AcyPlieFPLi-681C1L73sTXMdOir_KjTQnI"
       ]
